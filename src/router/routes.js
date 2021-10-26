@@ -9,14 +9,19 @@ const routes = [
       { path: 'teachers', component: () => import('pages/TeachersPage.vue'), name: 'Teachers' },
       { path: 'newsfeed', component: () => import('pages/NewsFeed.vue'), name: 'newsfeed' },
       { path: 'aboutus', component: () => import('pages/AboutUs.vue'), name: 'AboutUs' },
-      { path: 'contactus', component: () => import('pages/ContactUs.vue'), name: 'contactus' },
-      { path: 'admin', component: () => import('src/pages/Admin/Admin.vue'), name: 'admin' }
+      { path: 'contactus', component: () => import('pages/ContactUs.vue'), name: 'contactus' }
     ]
   },
   {
     name: 'LoginIn',
     path: '/login',
     component: () => import('pages/LoginPage.vue')
+  },
+  {
+    name: 'Admin',
+    path: '/admin',
+    component: () => import('src/pages/Admin/Admin.vue'),
+    meta: { requireLogin: true }
   },
 
   // Always leave this as last one,

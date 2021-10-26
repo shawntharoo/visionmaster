@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
+import { getAuth } from '@firebase/auth'
 
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
@@ -14,5 +15,6 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig)
 const db = getFirestore()
+const firebaseAuth = getAuth()
 
-export default db
+export default { db, firebaseAuth }

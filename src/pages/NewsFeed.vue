@@ -17,7 +17,7 @@
 <script>
 import { formatDistance } from 'date-fns'
 import { defineComponent } from 'vue'
-import db from 'src/boot/firebase'
+import firebase from 'src/boot/firebase'
 import {
   collection,
   query,
@@ -46,7 +46,7 @@ export default defineComponent({
   },
 
   mounted () {
-    const q = query(collection(db, 'News'), orderBy('Date'))
+    const q = query(collection(firebase.db, 'News'), orderBy('Date'))
     onSnapshot(
       q,
       (snapshot) => {

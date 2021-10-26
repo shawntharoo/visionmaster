@@ -225,7 +225,7 @@
 <script>
 
 import { defineComponent, ref } from 'vue'
-import db from 'src/boot/firebase'
+import firebase from 'src/boot/firebase'
 import {
   collection,
   query,
@@ -250,7 +250,7 @@ export default defineComponent({
     }
   },
   mounted () {
-    const q = query(collection(db, 'Timetable'), orderBy('Day'))
+    const q = query(collection(firebase.db, 'Timetable'), orderBy('Day'))
     onSnapshot(
       q,
       (snapshot) => {
