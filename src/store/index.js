@@ -41,14 +41,17 @@ const actions = {
   },
 
   Login (payload) {
-    console.log('Login')
+    const router = useRouter()
 
-    const { email, pass } = payload
+    const { username, password } = payload
 
-    signInWithEmailAndPassword(auth, email, pass)
+    signInWithEmailAndPassword(auth, username, password)
       .then((user) => {
-        // Signed in
-        // ...
+        if (user) {
+          router.push('/admin')
+        } else {
+          router.push('/login')
+        }
       })
       .catch((error) => {
         console.log(error.code)

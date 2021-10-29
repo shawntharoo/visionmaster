@@ -20,16 +20,16 @@
           </div>
         </q-card-section>
         <q-card-section>
-          <q-form class="q-gutter-md" @submit.prevent="submitForm">
-            <q-input label="Username" v-model="login.username">
+          <q-form class="q-gutter-md" @submit.prevent="onLogin">
+            <q-input label="Username" v-model="form.username">
             </q-input>
-            <q-input label="Password" type="password" v-model="login.password">
+            <q-input label="Password" type="password" v-model="form.password">
             </q-input>
             <div>
               <q-btn class="full-width" color="primary" label="Login" type="submit" rounded></q-btn>
               <div class="text-center q-mt-sm q-gutter-lg">
-                <router-link class="text-white" to="/login">Esqueceu a senha?</router-link>
-                <router-link class="text-white" to="/login">Criar conta</router-link>
+                <router-link class="text-black" to="/login">Esqueceu a senha?</router-link>
+                <router-link class="text-black" to="/login">Criar conta</router-link>
               </div>
             </div>
           </q-form>
@@ -40,50 +40,22 @@
 </template>
 
 <script>
-import { useQuasar } from 'quasar'
-import { mapActions } from 'vuex'
-let $q
+import { ref, inject } from 'vue'
 export default {
   name: 'Login',
-  data () {
+  setup () {
+    const store = inject('store')
+
+    const form = ref({
+      username: 'saman',
+      password: 'pass'
+    })
     return {
-      login: {
-        username: 'Joabson',
-        password: 'a2d4g6j8'
+      form,
+      onLogin () {
+        store.actions.Login(form.value)
       }
     }
-  },
-  methods: {
-    ...mapActions('auth', ['doLogin']),
-    async submitForm () {
-      if (!this.login.username || !this.login.password) {
-        $q.notify({
-          type: 'negative',
-          message: 'Os dados informados são inválidos.'
-        })
-      } else if (this.login.password.length < 6) {
-        $q.notify({
-          type: 'negative',
-          message: 'A senha deve ter 6 ou mais caracteres.'
-        })
-      } else {
-        try {
-          await this.doLogin(this.login)
-          const toPath = this.$route.query.to || '/admin'
-          this.$router.push(toPath)
-        } catch (err) {
-          if (err.response.data.detail) {
-            $q.notify({
-              type: 'negative',
-              message: err.response.data.detail
-            })
-          }
-        }
-      }
-    }
-  },
-  mounted () {
-    $q = useQuasar()
   }
 }
 </script>

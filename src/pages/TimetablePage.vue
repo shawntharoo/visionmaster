@@ -234,7 +234,7 @@ import {
 } from 'firebase/firestore'
 
 export default defineComponent({
-  name: 'pageTeachers',
+  name: 'pageTimetable',
   data () {
     return {
       newContent: '',

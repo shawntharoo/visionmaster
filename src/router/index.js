@@ -1,6 +1,7 @@
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
+import firebase from 'src/boot/firebase'
 
 /*
  * If not building with SSR mode, you can
@@ -12,6 +13,7 @@ import routes from './routes'
  */
 
 export default route(function ({ store, ssrContext }) {
+  const auth = firebase.firebaseAuth
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory)
@@ -27,8 +29,7 @@ export default route(function ({ store, ssrContext }) {
   })
 
   Router.beforeEach((to, from, next) => {
-    const auth = store.state.auth
-    if (to.matched.some(record => record.meta.requireLogin) && !auth.isAuthenticated) {
+    if (to.matched.some(record => record.meta.requireLogin) && auth.currentUser == null) {
       next({
         name: 'LoginIn',
         query: { to: to.path }

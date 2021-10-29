@@ -18,9 +18,12 @@ const routes = [
     component: () => import('pages/LoginPage.vue')
   },
   {
-    name: 'Admin',
     path: '/admin',
-    component: () => import('src/pages/Admin/Admin.vue'),
+    component: () => import('layouts/AdminLayout.vue'),
+    children: [
+      { path: '', component: () => import('src/pages/Admin/Timetables.vue'), name: 'Timetable' },
+      { path: 'adminNewsfeed', component: () => import('pages/Admin/AdminNewsFeed.vue'), name: 'AdminNewsfeed' }
+    ],
     meta: { requireLogin: true }
   },
 
