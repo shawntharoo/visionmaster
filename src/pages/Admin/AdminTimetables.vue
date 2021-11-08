@@ -63,14 +63,31 @@
         hint="Special notes"
       />
 
-           <q-input
+           <!-- <q-input
         filled
         v-model="start"
         label="Start time *"
         hint="Class start time"
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Please type something']"
-      />
+      /> -->
+
+       <div class="q-pt-md q-pb-md">
+ <q-badge color="teal">
+        Class start time: {{ proxyTimeStart }}
+      </q-badge>
+      <span class="q-pl-md"></span>
+          <q-btn icon="access_time" round color="primary">
+      <q-popup-proxy @before-show="updateProxyStart" cover transition-show="scale" transition-hide="scale">
+        <q-time v-model="start">
+          <div class="row items-center justify-end q-gutter-sm">
+            <q-btn label="Cancel" color="primary" flat v-close-popup />
+            <q-btn label="OK" color="primary" flat @click="saveStart" v-close-popup />
+          </div>
+        </q-time>
+      </q-popup-proxy>
+    </q-btn>
+</div>
 
          <!--     <q-input
         filled
@@ -82,15 +99,15 @@
       /> -->
        <div class="q-pt-md q-pb-md">
  <q-badge color="teal">
-        Class end time: {{ end }}
+        Class end time: {{ proxyTimeEnd }}
       </q-badge>
       <span class="q-pl-md"></span>
           <q-btn icon="access_time" round color="primary">
-      <q-popup-proxy @before-show="updateProxy" cover transition-show="scale" transition-hide="scale">
-        <q-time v-model="proxyTime">
+      <q-popup-proxy @before-show="updateProxyEnd" cover transition-show="scale" transition-hide="scale">
+        <q-time v-model="end">
           <div class="row items-center justify-end q-gutter-sm">
             <q-btn label="Cancel" color="primary" flat v-close-popup />
-            <q-btn label="OK" color="primary" flat @click="save" v-close-popup />
+            <q-btn label="OK" color="primary" flat @click="saveEnd" v-close-popup />
           </div>
         </q-time>
       </q-popup-proxy>
@@ -142,28 +159,37 @@ export default defineComponent({
     const teacher = ref(null)
     const subject = ref(null)
     const note = ref(null)
-    const start = ref(null)
+    const start = ref('11:00')
     const end = ref('11:00')
     const day = ref(null)
-    const proxyTime = ref('11:00')
+    const proxyTimeEnd = ref('11:00')
+    const proxyTimeStart = ref('11:00')
     return {
       options: [
         'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
       ],
-      fixed: ref(true),
+      fixed: ref(false),
       teacher,
       subject,
       note,
       start,
       day,
-      proxyTime,
+      proxyTimeEnd,
+      proxyTimeStart,
       end,
-      updateProxy () {
-        proxyTime.value = end.value
+      updateProxyEnd () {
+        end.value = proxyTimeEnd.value
         console.log(end)
       },
-      save () {
-        end.value = proxyTime.value
+      saveEnd () {
+        proxyTimeEnd.value = end.value
+      },
+      updateProxyStart () {
+        start.value = proxyTimeStart.value
+        console.log(end)
+      },
+      saveStart () {
+        proxyTimeStart.value = start.value
       }
     }
   },
@@ -182,12 +208,15 @@ export default defineComponent({
       this.subject = item.Subject
       this.note = item.Notes
       this.day = item.Day
-      this.start = item.Start
-      this.end = item.End
+      this.proxyTimeStart = item.Start
+      this.updateProxyStart()
+      this.proxyTimeEnd = item.End
+      this.updateProxyEnd()
     },
     addNewSlot: function () {
       this.onReset()
-      this.updateProxy()
+      this.updateProxyEnd()
+      this.updateProxyStart()
       this.fixed = true
       this.selectedItem = null
     },
@@ -197,7 +226,7 @@ export default defineComponent({
     },
     async onSubmit () {
       if (this.selectedItem != null) {
-        console.log('not null')
+        this.fixed = false
         const docRef = doc(firebase.db, 'Timetable', this.selectedItem.id)
         // Update the timestamp field with the value from the server
         await setDoc(docRef, {
@@ -205,19 +234,18 @@ export default defineComponent({
           Subject: this.subject,
           Notes: this.note,
           Day: this.day,
-          Start: this.start,
-          End: this.end
+          Start: this.proxyTimeStart,
+          End: this.proxyTimeEnd
         })
       } else {
         this.fixed = false
-        console.log('null')
         await addDoc(collection(firebase.db, 'Timetable'), {
           Teacher: this.teacher,
           Subject: this.subject,
           Notes: this.note,
           Day: this.day,
-          Start: this.start,
-          End: this.end
+          Start: this.proxyTimeStart,
+          End: this.proxyTimeEnd
         })
       }
     },
