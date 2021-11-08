@@ -3,19 +3,16 @@
   <div class="q-px-lg q-pb-md">
     <q-timeline color="secondary">
 
-      <q-timeline-entry heading body="November, 2017" />
-
       <q-timeline-entry v-for="item in items" :key="item.Date"
         :title="item.Title"
-        :subtitle= "item.Date"
+        :subtitle= "relativeDate (item.Date)"
         :body="item.Description"
       />
-
     </q-timeline>
   </div>
 </template>
 <script>
-import { formatDistance } from 'date-fns'
+import { fromUnixTime, intervalToDuration, format } from 'date-fns'
 import { defineComponent } from 'vue'
 import firebase from 'src/boot/firebase'
 import {
@@ -39,14 +36,24 @@ export default defineComponent({
       ]
     }
   },
-  mathod: {
+  methods: {
     relativeDate (value) {
-      return formatDistance(value, new Date())
+      const formatteddate = intervalToDuration({
+        start: fromUnixTime(value),
+        end: new Date()
+      })
+      console.log(formatteddate)
+      if (formatteddate.days === 0 && formatteddate.months === 0 && formatteddate.years === 0) {
+        const date = formatteddate.minutes + ' minutes ago'
+        return date
+      } else {
+        return format(new Date(value * 1000), 'MM/dd/yyyy')
+      }
     }
   },
 
   mounted () {
-    const q = query(collection(firebase.db, 'News'), orderBy('Date'))
+    const q = query(collection(firebase.db, 'News'), orderBy('Date', 'desc'))
     onSnapshot(
       q,
       (snapshot) => {
@@ -55,15 +62,12 @@ export default defineComponent({
           itemData.id = change.doc.id
           if (change.type === 'added') {
             this.items.unshift(itemData)
-            console.log('New item: ', itemData)
           }
           if (change.type === 'modified') {
-            console.log('Modified item: ', itemData)
             const index = this.items.findIndex((item) => item.id === itemData.id)
             Object.assign(this.items[index], itemData)
           }
           if (change.type === 'removed') {
-            console.log('Removed item: ', itemData)
             const index = this.items.findIndex((item) => item.id === itemData.id)
             this.items.splice(index, 1)
           }

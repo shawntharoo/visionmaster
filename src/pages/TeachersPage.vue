@@ -2,11 +2,17 @@
 .my-card
   width: 100%
   max-width: 350px
+
+.teacherimg
+      max-height: 200px
+      max-width: 350px
+      object-fit: none
+
 </style>
 <template>
   <div class="q-pa-md row items-start q-gutter-md">
     <q-card class="my-card" flat bordered v-for="item in items" :key="item.Name">
-      <q-img
+      <q-img class="teacherimg"
         :src="item.Image"
       />
 
@@ -74,15 +80,12 @@ export default defineComponent({
           itemData.id = change.doc.id
           if (change.type === 'added') {
             this.items.unshift(itemData)
-            console.log('New item: ', itemData)
           }
           if (change.type === 'modified') {
-            console.log('Modified item: ', itemData)
             const index = this.items.findIndex((item) => item.id === itemData.id)
             Object.assign(this.items[index], itemData)
           }
           if (change.type === 'removed') {
-            console.log('Removed item: ', itemData)
             const index = this.items.findIndex((item) => item.id === itemData.id)
             this.items.splice(index, 1)
           }

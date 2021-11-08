@@ -259,15 +259,12 @@ export default defineComponent({
           itemData.id = change.doc.id
           if (change.type === 'added') {
             this.items.unshift(itemData)
-            console.log('New item: ', itemData)
           }
           if (change.type === 'modified') {
-            console.log('Modified item: ', itemData)
             const index = this.items.findIndex((item) => item.id === itemData.id)
             Object.assign(this.items[index], itemData)
           }
           if (change.type === 'removed') {
-            console.log('Removed item: ', itemData)
             const index = this.items.findIndex((item) => item.id === itemData.id)
             this.items.splice(index, 1)
           }

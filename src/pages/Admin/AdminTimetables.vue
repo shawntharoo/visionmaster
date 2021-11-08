@@ -63,7 +63,7 @@
         hint="Special notes"
       />
 
-            <q-input
+           <q-input
         filled
         v-model="start"
         label="Start time *"
@@ -72,27 +72,36 @@
         :rules="[ val => val && val.length > 0 || 'Please type something']"
       />
 
-            <q-input
+         <!--     <q-input
         filled
         v-model="end"
         label="End time *"
         hint="Class end time"
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Please type something']"
-      />
-
-      <q-input
-        filled
-        v-model="day"
-        label="Class day *"
-        lazy-rules
-        :rules="[
-          val => val !== null && val !== '' || 'Please type a day of the week']"
-      />
+      /> -->
+       <div class="q-pt-md q-pb-md">
+ <q-badge color="teal">
+        Class end time: {{ end }}
+      </q-badge>
+      <span class="q-pl-md"></span>
+          <q-btn icon="access_time" round color="primary">
+      <q-popup-proxy @before-show="updateProxy" cover transition-show="scale" transition-hide="scale">
+        <q-time v-model="proxyTime">
+          <div class="row items-center justify-end q-gutter-sm">
+            <q-btn label="Cancel" color="primary" flat v-close-popup />
+            <q-btn label="OK" color="primary" flat @click="save" v-close-popup />
+          </div>
+        </q-time>
+      </q-popup-proxy>
+    </q-btn>
+</div>
+<q-select outlined v-model="day" :options="options" label="Class day" hint="The day of the week"/>
 
       <div>
         <q-btn label="Submit" type="submit" color="primary" />
         <q-btn label="Close" type="reset" color="primary" flat class="q-ml-sm" v-close-popup/>
+        <span class="q-pl-sm"></span>
                    <q-btn
       round
       size="sm"
@@ -134,16 +143,28 @@ export default defineComponent({
     const subject = ref(null)
     const note = ref(null)
     const start = ref(null)
-    const end = ref(null)
+    const end = ref('11:00')
     const day = ref(null)
+    const proxyTime = ref('11:00')
     return {
-      fixed: ref(false),
+      options: [
+        'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+      ],
+      fixed: ref(true),
       teacher,
       subject,
       note,
       start,
+      day,
+      proxyTime,
       end,
-      day
+      updateProxy () {
+        proxyTime.value = end.value
+        console.log(end)
+      },
+      save () {
+        end.value = proxyTime.value
+      }
     }
   },
   data () {
@@ -166,6 +187,7 @@ export default defineComponent({
     },
     addNewSlot: function () {
       this.onReset()
+      this.updateProxy()
       this.fixed = true
       this.selectedItem = null
     },

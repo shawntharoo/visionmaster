@@ -21,8 +21,9 @@ const routes = [
     path: '/admin',
     component: () => import('layouts/AdminLayout.vue'),
     children: [
-      { path: '', component: () => import('src/pages/Admin/Timetables.vue'), name: 'Timetable' },
-      { path: 'adminNewsfeed', component: () => import('pages/Admin/AdminNewsFeed.vue'), name: 'AdminNewsfeed' }
+      { path: '', component: () => import('pages/Admin/AdminTimetables.vue'), name: 'AdminTimetable' },
+      { path: 'adminNewsfeed', component: () => import('pages/Admin/AdminNewsFeed.vue'), name: 'AdminNewsfeed' },
+      { path: 'adminTeachers', component: () => import('pages/Admin/AdminTeachers.vue'), name: 'AdminTechers' }
     ],
     meta: { requireLogin: true }
   },

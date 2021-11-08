@@ -9,7 +9,7 @@
           <q-avatar>
             <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
           </q-avatar>
-          Title
+          Vision Master Institute
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -19,7 +19,7 @@
         <q-list>
 
             <template v-for="(menuItem, index) in menuList" :key="index">
-              <q-item clickable :active="menuItem.label === 'Outbox'" v-ripple>
+              <q-item clickable exact v-ripple :to="menuItem.to">
                 <q-item-section avatar>
                   <q-icon :name="menuItem.icon" />
                 </q-item-section>
@@ -56,40 +56,22 @@
 import { ref } from 'vue'
 const menuList = [
   {
-    icon: 'inbox',
-    label: 'Inbox',
-    separator: true
+    icon: 'event',
+    label: 'Timetable',
+    separator: false,
+    to: '/admin'
   },
   {
-    icon: 'send',
-    label: 'Outbox',
-    separator: false
+    icon: 'people',
+    label: 'Teachers',
+    separator: false,
+    to: '/admin/adminTeachers'
   },
   {
-    icon: 'delete',
-    label: 'Trash',
-    separator: false
-  },
-  {
-    icon: 'error',
-    label: 'Spam',
-    separator: true
-  },
-  {
-    icon: 'settings',
-    label: 'Settings',
-    separator: false
-  },
-  {
-    icon: 'feedback',
-    label: 'Send Feedback',
-    separator: false
-  },
-  {
-    icon: 'help',
-    iconColor: 'primary',
-    label: 'Help',
-    separator: false
+    icon: 'feed',
+    label: 'News',
+    separator: false,
+    to: '/admin/adminNewsfeed'
   }
 ]
 export default {
