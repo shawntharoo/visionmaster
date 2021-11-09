@@ -41,10 +41,12 @@
 
 <script>
 import { ref, inject } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
   name: 'Login',
   setup () {
     const store = inject('store')
+    const router = useRouter()
 
     const form = ref({
       username: 'saman',
@@ -53,7 +55,7 @@ export default {
     return {
       form,
       onLogin () {
-        store.actions.Login(form.value)
+        store.actions.Login(form.value, router)
       }
     }
   }

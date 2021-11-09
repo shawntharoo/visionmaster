@@ -1,10 +1,8 @@
 import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
 import firebase from 'src/boot/firebase'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth'
 
 const auth = firebase.firebaseAuth
-
 const state = reactive({
 
   contacts: [{
@@ -23,13 +21,11 @@ const state = reactive({
 
 const actions = {
 
-  handleAuthStateChanged () {
-    const router = useRouter()
-    console.log(router.currentRoute)
+  handleAuthStateChanged (router) {
     if (router.currentRoute.value.fullPath === '/admin') {
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          console.log('Activo')
+          console.log('Active')
           router.push('/admin')
         } else {
           router.push('/login')
@@ -40,16 +36,14 @@ const actions = {
     }
   },
 
-  Login (payload) {
-    const router = useRouter()
-
+  async Login (payload, router) {
     const { username, password } = payload
-
     signInWithEmailAndPassword(auth, username, password)
       .then((user) => {
         if (user) {
           router.push('/admin')
         } else {
+          console.log(router)
           router.push('/login')
         }
       })
@@ -77,7 +71,7 @@ const actions = {
       })
   },
 
-  logOut () {
+  async logOut () {
     signOut(auth)
   }
 

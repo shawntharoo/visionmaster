@@ -179,14 +179,12 @@ export default defineComponent({
       end,
       updateProxyEnd () {
         end.value = proxyTimeEnd.value
-        console.log(end)
       },
       saveEnd () {
         proxyTimeEnd.value = end.value
       },
       updateProxyStart () {
         start.value = proxyTimeStart.value
-        console.log(end)
       },
       saveStart () {
         proxyTimeStart.value = start.value

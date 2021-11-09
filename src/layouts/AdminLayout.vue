@@ -28,8 +28,16 @@
                 </q-item-section>
               </q-item>
               <q-separator :key="'sep' + index"  v-if="menuItem.separator" />
-            </template>
 
+            </template>
+                 <q-item clickable exact v-ripple @click="logout()">
+                <q-item-section avatar>
+                  <q-icon name="logout" />
+                </q-item-section>
+                <q-item-section style="color:red">
+                 LOGOUT
+                </q-item-section>
+              </q-item>
           </q-list>
         </q-scroll-area>
     </q-drawer>
@@ -53,7 +61,8 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
+import { useRouter } from 'vue-router'
 const menuList = [
   {
     icon: 'event',
@@ -70,20 +79,30 @@ const menuList = [
   {
     icon: 'feed',
     label: 'News',
-    separator: false,
+    separator: true,
     to: '/admin/adminNewsfeed'
   }
 ]
 export default {
   setup () {
+    const router = useRouter()
+    const store = inject('store')
     const leftDrawerOpen = ref(false)
 
     return {
+      store,
+      router,
       leftDrawerOpen,
       menuList,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
       }
+    }
+  },
+  methods: {
+    logout: function () {
+      this.store.actions.logOut()
+      this.router.push('/')
     }
   }
 }
