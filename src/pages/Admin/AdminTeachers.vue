@@ -134,6 +134,7 @@
 <script>
 
 import { defineComponent, ref } from 'vue'
+import { useQuasar } from 'quasar'
 import firebase from 'src/boot/firebase'
 import {
   collection,
@@ -150,6 +151,7 @@ import { ref as fireRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 export default defineComponent({
   name: 'pageAdminTeachers',
   setup () {
+    const $q = useQuasar()
     const name = ref(null)
     const subject = ref(null)
     const education = ref(null)
@@ -163,7 +165,8 @@ export default defineComponent({
       education,
       description,
       image,
-      model
+      model,
+      $q
     }
   },
   data () {
@@ -191,13 +194,28 @@ export default defineComponent({
     },
     async deleteTeacher () {
       await deleteDoc(doc(firebase.db, 'Teachers', this.selectedItem.id))
+        .then(data => {
+          this.$q.notify({
+            type: 'positive',
+            position: 'center',
+            message: 'Document successfully deleted'
+          })
+        }, error => {
+          this.$q.notify({
+            type: 'negative',
+            position: 'center',
+            message: error
+          })
+        })
       this.fixed = false
     },
     async onSubmit () {
       if (this.selectedItem != null) {
         const fileArray = []
-        fileArray.push(this.files)
-        await this.uploadFn(fileArray)
+        if (this.file !== undefined) {
+          fileArray.push(this.files)
+          await this.uploadFn(fileArray)
+        }
         const docRef = doc(firebase.db, 'Teachers', this.selectedItem.id)
         await setDoc(docRef, {
           Name: this.name,
@@ -205,23 +223,63 @@ export default defineComponent({
           Description: this.description,
           Education: this.education,
           Image: this.image
+        }).then(data => {
+          this.$q.notify({
+            color: 'positive',
+            textColor: 'white',
+            icon: 'cloud_done',
+            position: 'center',
+            message: 'Data successfully stored in cloud'
+          })
+        }, error => {
+          this.$q.notify({
+            type: 'negative',
+            position: 'center',
+            message: error
+          })
         })
       } else {
         this.fixed = false
-        console.log('null')
         await addDoc(collection(firebase.db, 'Teachers'), {
           Name: this.name,
           Subject: this.subject,
           Description: this.description,
           Education: this.education,
           Image: this.image
+        }).then(data => {
+          this.$q.notify({
+            color: 'positive',
+            textColor: 'white',
+            icon: 'cloud_done',
+            position: 'center',
+            message: 'Data successfully stored in cloud'
+          })
+        }, error => {
+          this.$q.notify({
+            type: 'negative',
+            position: 'center',
+            message: error
+          })
         })
       }
+      this.fixed = false
     },
     async uploadFn (file) {
       const teacherImagesRef = fireRef(firebase.storage, `teachers/${file[0].name}`)
       await uploadBytes(teacherImagesRef, file[0]).then((snapshot) => {
-        console.log(snapshot)
+        this.$q.notify({
+          color: 'positive',
+          textColor: 'white',
+          icon: 'cloud_done',
+          position: 'center',
+          message: 'Image succeesfully uploaded'
+        })
+      }, error => {
+        this.$q.notify({
+          type: 'negative',
+          position: 'center',
+          message: error
+        })
       })
       await this.download(file)
     },
@@ -235,11 +293,14 @@ export default defineComponent({
     async download (file) {
       await getDownloadURL(fireRef(firebase.storage, `teachers/${file[0].name}`))
         .then((url) => {
-          console.log(url)
           this.image = url
         })
         .catch((error) => {
-          console.log(error)
+          this.$q.notify({
+            type: 'negative',
+            position: 'center',
+            message: error
+          })
         })
     }
   },
@@ -265,7 +326,11 @@ export default defineComponent({
         })
       },
       (error) => {
-        console.log(error)
+        this.$q.notify({
+          type: 'negative',
+          position: 'center',
+          message: error
+        })
       }
     )
   }

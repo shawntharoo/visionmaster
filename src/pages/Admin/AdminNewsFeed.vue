@@ -8,6 +8,7 @@
         :subtitle= "relativeDate (item.Date)"
         :body="item.Description"
         icon="delete"
+        color="red"
         @click="deleteNews(item)"
       />
 
@@ -74,14 +75,17 @@ import {
   doc,
   addDoc
 } from 'firebase/firestore'
+import { useQuasar } from 'quasar'
 
 export default defineComponent({
   name: 'PageNewsFeed',
   setup () {
+    const $q = useQuasar()
     const model = ref(null)
     const title = ref(null)
     const description = ref(null)
     return {
+      $q,
       model,
       title,
       description,
@@ -116,6 +120,19 @@ export default defineComponent({
     },
     deleteNews (news) {
       deleteDoc(doc(firebase.db, 'News', news.id))
+        .then(data => {
+          this.$q.notify({
+            type: 'positive',
+            position: 'center',
+            message: 'Document successfully deleted'
+          })
+        }, error => {
+          this.$q.notify({
+            type: 'negative',
+            position: 'center',
+            message: error
+          })
+        })
     },
     postNewNews: function () {
       this.onReset()
@@ -127,6 +144,20 @@ export default defineComponent({
         Title: this.title,
         Description: this.description,
         Date: Math.round((new Date()).getTime() / 1000)
+      }).then(data => {
+        this.$q.notify({
+          color: 'positive',
+          textColor: 'white',
+          icon: 'cloud_done',
+          position: 'center',
+          message: 'Documet succeesfully addedd to cloud'
+        })
+      }, error => {
+        this.$q.notify({
+          type: 'negative',
+          position: 'center',
+          message: error
+        })
       })
     },
     onReset () {
@@ -157,7 +188,11 @@ export default defineComponent({
         })
       },
       (error) => {
-        console.log(error)
+        this.$q.notify({
+          type: 'negative',
+          position: 'center',
+          message: error
+        })
       }
     )
   }

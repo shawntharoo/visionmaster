@@ -11,7 +11,7 @@
     >
       <q-input
         filled
-        v-model="name"
+        v-model="cusname"
         label="Your name *"
         hint="Name and surname"
         lazy-rules
@@ -20,7 +20,7 @@
 
  <q-input
         filled
-        v-model="name"
+        v-model="email"
         label="Your email"
         hint="Email address"
         lazy-rules
@@ -30,24 +30,21 @@
       <q-input
         filled
         type="number *"
-        v-model="age"
+        v-model="mobile"
         label="Your contact number *"
         hint="Contact number"
         lazy-rules
         :rules="[
-          val => val !== null && val !== '' || 'Please type your contact number',
-          val => val > 0 && val < 100 || 'Please type a real contact number'
+          val => val !== null && val !== '' || 'Please type your contact number'
         ]"
       />
 
           <q-input
         filled
-        v-model="name"
+        v-model="message"
         label="Message"
         hint="Message"
       />
-
-      <q-toggle v-model="accept" label="I accept the license and terms" />
 
       <div>
         <q-btn label="Submit" type="submit" color="primary"/>
@@ -153,43 +150,61 @@
 <script>
 import { useQuasar } from 'quasar'
 import { ref } from 'vue'
+import firebase from 'src/boot/firebase'
+import {
+  collection,
+  addDoc
+} from 'firebase/firestore'
 
 export default {
   setup () {
     const $q = useQuasar()
 
-    const name = ref(null)
-    const age = ref(null)
-    const accept = ref(false)
+    const cusname = ref(null)
+    const email = ref(null)
+    const mobile = ref(null)
+    const message = ref(null)
 
     return {
-      name,
-      age,
-      accept,
+      $q,
+      cusname,
+      email,
+      mobile,
+      message
+    }
+  },
+  methods: {
+    async onSubmit () {
+      await addDoc(collection(firebase.db, 'Messages'), {
+        Name: this.cusname,
+        Email: this.email,
+        Mobile: this.mobile,
+        Message: this.message,
+        MarkRead: false
+      }).then(data => {
+        this.$q.notify({
+          color: 'positive',
+          textColor: 'white',
+          icon: 'cloud_done',
+          position: 'center',
+          message: 'Message succeesfully sent'
+        })
+      }, error => {
+        this.$q.notify({
+          type: 'negative',
+          position: 'center',
+          message: error
+        })
+      })
 
-      onSubmit () {
-        if (accept.value !== true) {
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: 'You need to accept the license and terms first'
-          })
-        } else {
-          $q.notify({
-            color: 'green-4',
-            textColor: 'white',
-            icon: 'cloud_done',
-            message: 'Submitted'
-          })
-        }
-      },
+      this.onReset()
+    },
 
-      onReset () {
-        name.value = null
-        age.value = null
-        accept.value = false
-      }
+    onReset () {
+      this.cusname = null
+      this.email = null
+      this.mobile = null
+      this.message = null
     }
   }
 }

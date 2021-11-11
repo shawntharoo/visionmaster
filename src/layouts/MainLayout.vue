@@ -5,7 +5,7 @@
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
+            <img src="https://firebasestorage.googleapis.com/v0/b/vision-e90f5.appspot.com/o/LOGO.jpg?alt=media&token=55ef8706-527f-455e-8b33-f16c6efbe48d">
           </q-avatar>
           Vision Higheir Education
           {{ $route.name }}

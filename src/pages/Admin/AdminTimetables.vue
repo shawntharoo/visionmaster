@@ -152,10 +152,12 @@ import {
   deleteDoc,
   doc
 } from 'firebase/firestore'
+import { useQuasar } from 'quasar'
 
 export default defineComponent({
   name: 'pageAdminTimetable',
   setup () {
+    const $q = useQuasar()
     const teacher = ref(null)
     const subject = ref(null)
     const note = ref(null)
@@ -165,6 +167,7 @@ export default defineComponent({
     const proxyTimeEnd = ref('11:00')
     const proxyTimeStart = ref('11:00')
     return {
+      $q,
       options: [
         'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
       ],
@@ -220,6 +223,19 @@ export default defineComponent({
     },
     async deleteSlot () {
       await deleteDoc(doc(firebase.db, 'Timetable', this.selectedItem.id))
+        .then(data => {
+          this.$q.notify({
+            type: 'positive',
+            position: 'center',
+            message: 'Document successfully deleted'
+          })
+        }, error => {
+          this.$q.notify({
+            type: 'negative',
+            position: 'center',
+            message: error
+          })
+        })
       this.fixed = false
     },
     async onSubmit () {
@@ -234,6 +250,20 @@ export default defineComponent({
           Day: this.day,
           Start: this.proxyTimeStart,
           End: this.proxyTimeEnd
+        }).then(data => {
+          this.$q.notify({
+            color: 'positive',
+            textColor: 'white',
+            icon: 'cloud_done',
+            position: 'center',
+            message: 'Document successfully updated'
+          })
+        }, error => {
+          this.$q.notify({
+            type: 'negative',
+            position: 'center',
+            message: error
+          })
         })
       } else {
         this.fixed = false
@@ -244,6 +274,20 @@ export default defineComponent({
           Day: this.day,
           Start: this.proxyTimeStart,
           End: this.proxyTimeEnd
+        }).then(data => {
+          this.$q.notify({
+            color: 'positive',
+            textColor: 'white',
+            icon: 'cloud_done',
+            position: 'center',
+            message: 'Documet succeesfully addedd to cloud'
+          })
+        }, error => {
+          this.$q.notify({
+            type: 'negative',
+            position: 'center',
+            message: error
+          })
         })
       }
     },
@@ -279,7 +323,11 @@ export default defineComponent({
         })
       },
       (error) => {
-        console.log(error)
+        this.$q.notify({
+          type: 'negative',
+          position: 'center',
+          message: error
+        })
       }
     )
   }

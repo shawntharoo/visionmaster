@@ -7,7 +7,7 @@
 
         <q-toolbar-title>
           <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
+            <img src="https://firebasestorage.googleapis.com/v0/b/vision-e90f5.appspot.com/o/LOGO.jpg?alt=media&token=55ef8706-527f-455e-8b33-f16c6efbe48d">
           </q-avatar>
           Vision Master Institute
         </q-toolbar-title>
@@ -32,7 +32,7 @@
             </template>
                  <q-item clickable exact v-ripple @click="logout()">
                 <q-item-section avatar>
-                  <q-icon name="logout" />
+                  <q-icon name="logout" color="red"/>
                 </q-item-section>
                 <q-item-section style="color:red">
                  LOGOUT
@@ -49,10 +49,7 @@
     <q-footer elevated class="bg-grey-8 text-white">
       <q-toolbar>
         <q-toolbar-title>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
-          </q-avatar>
-          <div>Title</div>
+          <div>{{ $route.name }}</div>
         </q-toolbar-title>
       </q-toolbar>
     </q-footer>
@@ -75,6 +72,12 @@ const menuList = [
     label: 'Teachers',
     separator: false,
     to: '/admin/adminTeachers'
+  },
+  {
+    icon: 'message',
+    label: 'Chat',
+    seperator: false,
+    to: '/admin/adminChat'
   },
   {
     icon: 'feed',

@@ -9,7 +9,7 @@
         <div class="col-1">
         </div>
         <div class="col-10">
-            <q-img fit="cover" style="max-height: 900px;" src="images/VMI.png">
+            <q-img fit="cover" style="max-height: 900px;" src="https://firebasestorage.googleapis.com/v0/b/vision-e90f5.appspot.com/o/VMI.png?alt=media&token=c20af9be-30c8-4b94-b840-b2ab8731cc94">
             </q-img>
 
         </div>

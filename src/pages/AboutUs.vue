@@ -8,7 +8,7 @@
         <div class="col-1">
         </div>
         <div class="col-10">
-            <q-img fit="cover" style="max-height: 900px;" src="images/tiution.jpg">
+            <q-img fit="cover" style="max-height: 900px;" src="https://firebasestorage.googleapis.com/v0/b/vision-e90f5.appspot.com/o/tiution.jpg?alt=media&token=d180100e-bbc4-4adc-bd35-6b915dbaddca">
             </q-img>
 
         </div>
