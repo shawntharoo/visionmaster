@@ -1,8 +1,8 @@
 {
   "name": "vision",
   "version": "0.0.1",
-  "description": "A Quasar Framework app",
-  "productName": "Quasar App",
+  "description": "Website for vision tution",
+  "productName": "Vision Master",
   "author": "shawntharoo <tharooshawn@gmail.com>",
   "private": true,
   "scripts": {
