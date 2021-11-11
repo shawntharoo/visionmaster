@@ -145,9 +145,9 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: 'Quasar App',
-        short_name: 'Quasar App',
-        description: 'A Quasar Framework app',
+        name: 'Vision Master',
+        short_name: 'Vision Master',
+        description: 'Website for vision tution',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
