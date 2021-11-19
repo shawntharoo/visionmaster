@@ -13,7 +13,7 @@
   <div class="q-pa-md row items-start q-gutter-md">
     <q-card class="my-card" flat bordered v-for="item in items" :key="item.Name">
       <q-img class="teacherimg"
-        :src="item.Image"
+        :src="item.Image.url"
       />
 
       <q-card-section>

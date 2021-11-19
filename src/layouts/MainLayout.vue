@@ -19,6 +19,15 @@
           :to="link.to"
           :label="link.label"
         />
+         <q-btn-dropdown auto-close stretch flat label="Timetable">
+
+               <q-route-tab
+               v-for="nested in nestedLinks"  :key="nested.to"
+          exact
+          :to="nested.to"
+          :label="nested.label"
+        />
+        </q-btn-dropdown>
       </q-tabs>
     </q-header>
 
@@ -45,10 +54,6 @@ const linksList = [
     to: '/'
   },
   {
-    label: 'Timetable',
-    to: '/timetable'
-  },
-  {
     label: 'Teachers',
     to: '/teachers'
   },
@@ -66,6 +71,17 @@ const linksList = [
   }
 ]
 
+const nestedLinkList = [
+  {
+    label: 'Regular Courses',
+    to: '/timetable'
+  },
+  {
+    label: 'Special Courses',
+    to: '/specialcourses'
+  }
+]
+
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
@@ -76,9 +92,11 @@ export default defineComponent({
   },
   setup () {
     const leftDrawerOpen = ref(false)
-
+    const tab = ref('mails')
     return {
+      tab,
       essentialLinks: linksList,
+      nestedLinks: nestedLinkList,
       leftDrawerOpen,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value

@@ -15,7 +15,7 @@
       <q-item clickable v-ripple v-for="item in items" :key="item.Name" @click="showTeacherDetils(item)">
         <q-item-section avatar>
           <q-avatar>
-            <img :src="item.Image">
+            <img :src="item.Image.url">
           </q-avatar>
         </q-item-section>
 
@@ -37,7 +37,7 @@
         <q-dialog v-model="fixed">
       <q-card>
         <q-card-section jus>
-          <div class="text-h6">Timetable Slots</div>
+          <div class="text-h6">Teacher detail</div>
         </q-card-section>
 
         <q-separator />
@@ -68,7 +68,7 @@
     <q-file v-if="this.selectedItem != null" v-model="files" filled bottom-slots label="Click here to update photo" counter max-files="12">
         <template v-slot:before>
           <q-avatar>
-            <img :src="image">
+            <img :src="image.url">
           </q-avatar>
         </template>
     </q-file>
@@ -146,7 +146,7 @@ import {
   deleteDoc,
   doc
 } from 'firebase/firestore'
-import { ref as fireRef, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { ref as fireRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 
 export default defineComponent({
   name: 'pageAdminTeachers',
@@ -192,6 +192,14 @@ export default defineComponent({
       this.fixed = true
       this.selectedItem = null
     },
+    deleteFirebaseImages: function (deleteImg) {
+      const delImgRef = fireRef(firebase.storage, `teachers/${deleteImg.name}`)
+      deleteObject(delImgRef).then((data) => {
+        console.log(data)
+      }).catch((error) => {
+        console.log(error.message)
+      })
+    },
     async deleteTeacher () {
       await deleteDoc(doc(firebase.db, 'Teachers', this.selectedItem.id))
         .then(data => {
@@ -207,6 +215,7 @@ export default defineComponent({
             message: error
           })
         })
+      this.deleteFirebaseImages(this.selectedItem.Image)
       this.fixed = false
     },
     async onSubmit () {
@@ -293,7 +302,10 @@ export default defineComponent({
     async download (file) {
       await getDownloadURL(fireRef(firebase.storage, `teachers/${file[0].name}`))
         .then((url) => {
-          this.image = url
+          const obj = {} // <---- Move declaration inside loop
+          obj.name = file.name
+          obj.url = url
+          this.image = obj
         })
         .catch((error) => {
           this.$q.notify({

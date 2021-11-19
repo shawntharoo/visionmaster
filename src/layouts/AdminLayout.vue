@@ -68,6 +68,12 @@ const menuList = [
     to: '/admin'
   },
   {
+    icon: 'folder_special',
+    label: 'Special Courses',
+    separator: false,
+    to: '/admin/adminSpecialcourses'
+  },
+  {
     icon: 'people',
     label: 'Teachers',
     separator: false,
